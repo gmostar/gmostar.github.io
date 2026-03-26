@@ -526,36 +526,35 @@
     pel.appendChild(p);
   }
 
-  // Cursor - fully hidden until first mouse move
+  // Cursor
   const cur=document.getElementById('cursor'), dot=document.getElementById('cursorDot');
-  let mx=0, my=0, cx=0, cy=0, cursorReady=false;
-
-  function showCursor(e){
+  let mx=window.innerWidth/2, my=window.innerHeight/2, cx=mx, cy=my;
+  document.addEventListener('pointermove', function init(e){
     mx=e.clientX; my=e.clientY; cx=mx; cy=my;
-    if(!cursorReady){
-      cursorReady=true;
-      cur.style.opacity='1';
-      dot.style.opacity='1';
-    }
-  }
-  window.addEventListener('mousemove', showCursor, {once:true});
-  window.addEventListener('mousemove', e=>{mx=e.clientX; my=e.clientY;});
-
+    cur.style.opacity='1'; dot.style.opacity='1';
+    document.removeEventListener('pointermove', init);
+  });
+  document.addEventListener('pointermove', e=>{mx=e.clientX; my=e.clientY;});
   (function loop(){
-    if(cursorReady){
-      cx+=(mx-cx)*.15; cy+=(my-cy)*.15;
-      cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
-      dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
-    }
+    cx+=(mx-cx)*.15; cy+=(my-cy)*.15;
+    cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
+    dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
     requestAnimationFrame(loop);
   })();
-
   document.querySelectorAll('a,button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';});
-    el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='transparent';});
+    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.marginLeft='-8px';cur.style.marginTop='-8px';cur.style.background='rgba(0,229,255,0.15)';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.marginLeft='0';cur.style.marginTop='0';cur.style.background='transparent';});
   });
 
   // Scroll reveal
   const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.remove('hidden');}});},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('hidden');obs.observe(el);});
-
+  // Email button - split to avoid Cloudflare scraping
+  const eLink = document.getElementById('emailLink');
+  if(eLink) eLink.addEventListener('click', e=>{
+    e.preventDefault();
+    window.location.href = ['mai','lto:gerardo.rz785','@gmail.com'].join('');
+  });
+</script>
+</body>
+</html>
