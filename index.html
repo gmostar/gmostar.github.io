@@ -64,18 +64,21 @@
 
     /* Cursor */
     .cursor {
-      width:20px;height:20px;
+      width:20px; height:20px;
       border:2px solid var(--sheikah); border-radius:50%;
       position:fixed; pointer-events:none; z-index:9999;
       top:0; left:0;
-      transition:width .15s,height .15s,background .15s;
+      opacity:0;
+      transition:width .15s, height .15s, background .15s, opacity .3s;
       box-shadow:0 0 10px var(--sheikah),0 0 20px rgba(0,229,255,.3);
       will-change:transform;
     }
     .cursor-dot {
-      width:4px;height:4px; background:var(--sheikah); border-radius:50%;
+      width:4px; height:4px; background:var(--sheikah); border-radius:50%;
       position:fixed; pointer-events:none; z-index:9999;
       top:0; left:0;
+      opacity:0;
+      transition:opacity .3s;
       box-shadow:0 0 6px var(--sheikah);
       will-change:transform;
     }
@@ -264,8 +267,8 @@
     .footer-logo{font-family:'Press Start 2P',monospace;font-size:.6rem;color:var(--poke-yellow);margin-bottom:.5rem;display:block;}
 
     .reveal{opacity:1;transform:translateY(0);transition:opacity .7s ease,transform .7s ease;}
-    .reveal.hidden{opacity:0;transform:translateY(28px);}
-    .reveal.hidden.visible{opacity:1;transform:translateY(0);}
+    .reveal.hidden{opacity:0;transform:translateY(24px);}
+    .reveal.visible{opacity:1 !important;transform:translateY(0) !important;}
 
     @media(max-width:768px){
       .about-grid{grid-template-columns:1fr;}
@@ -482,16 +485,16 @@
     <div class="sc contact-inner reveal">
       <p>Whether you have an opportunity, a question, or just want to talk shop — I'm always open. Currently looking for internship and full-time opportunities in EE/CE!</p>
       <div class="contact-links">
-        <a href="mailto:gerardo.rz785&#64;gmail.com" class="c-link">📧 Email</a>
+        <a href="#" id="emailLink" class="c-link">📧 Email</a>
         <a href="https://linkedin.com/in/gerardoramirez42" target="_blank" class="c-link">💼 LinkedIn</a>
         <a href="https://github.com/gmostar" target="_blank" class="c-link">🐙 GitHub</a>
       </div>
-      <form class="contact-form" onsubmit="handleForm(event)">
+      <form class="contact-form" action="https://formspree.io/f/maqlylpe" method="POST">
         <div class="form-row">
-          <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
-          <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com" required/></div>
+          <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your name" required/></div>
+          <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
         </div>
-        <div class="form-group"><label>Message</label><textarea placeholder="What's on your mind?" required></textarea></div>
+        <div class="form-group"><label>Message</label><textarea name="message" placeholder="What's on your mind?" required></textarea></div>
         <button type="submit" class="form-submit">⚔️ Send Message</button>
       </form>
     </div>
@@ -523,20 +526,32 @@
     pel.appendChild(p);
   }
 
-  // Cursor
+  // Cursor - fully hidden until first mouse move
   const cur=document.getElementById('cursor'), dot=document.getElementById('cursorDot');
-  let mx=window.innerWidth/2, my=window.innerHeight/2, cx=mx, cy=my;
-  let cursorActive = false;
-  document.addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;if(!cursorActive){cursorActive=true;cur.style.opacity='1';dot.style.opacity='1';}});
-  cur.style.opacity='0'; dot.style.opacity='0';
+  let mx=0, my=0, cx=0, cy=0, cursorReady=false;
+
+  function showCursor(e){
+    mx=e.clientX; my=e.clientY; cx=mx; cy=my;
+    if(!cursorReady){
+      cursorReady=true;
+      cur.style.opacity='1';
+      dot.style.opacity='1';
+    }
+  }
+  window.addEventListener('mousemove', showCursor, {once:true});
+  window.addEventListener('mousemove', e=>{mx=e.clientX; my=e.clientY;});
+
   (function loop(){
-    cx+=(mx-cx)*.15; cy+=(my-cy)*.15;
-    cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
-    dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
+    if(cursorReady){
+      cx+=(mx-cx)*.15; cy+=(my-cy)*.15;
+      cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
+      dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
+    }
     requestAnimationFrame(loop);
   })();
+
   document.querySelectorAll('a,button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';cur.style.transform=`translate(${cx-18}px,${cy-18}px)`;});
+    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';});
     el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='transparent';});
   });
 
@@ -544,9 +559,3 @@
   const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.remove('hidden');}});},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('hidden');obs.observe(el);});
 
-  // Form
-  function handleForm(e){
-    e.preventDefault();
-    const btn=e.target.querySelector('.form-submit');
-    btn.textContent='✅ Message Sent!';
-    btn.style.background='linear-gradient(135deg,#5d
