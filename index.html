@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gerardo Ramirez – Engineer & Adventurer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sky:      #7ecfff;
+      --grass:    #5dbf6a;
+      --grass-dk: #3a8c47;
+      --sheikah:  #00e5ff;
+      --poke-red: #e3350d;
+      --poke-yellow: #ffcb05;
+      --poke-blue:#3d7dca;
+      --dark:     #0d1b12;
+      --dark2:    #132219;
+      --card-bg:  rgba(13,27,18,0.82);
+      --text:     #f0ede3;
+      --muted:    #a8b89a;
+      --radius:   18px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* BG */
+    .world-bg {
+      position:fixed; inset:0; z-index:0; pointer-events:none;
+      background: linear-gradient(180deg, #0d1b2a 0%, #1a3a2a 40%, #0d1b12 100%);
+    }
+    .stars { position:absolute; inset:0; }
+    .star {
+      position:absolute; background:#fff; border-radius:50%;
+      animation:twinkle 3s ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.4);}
+    }
+
+    /* Sheikah eye */
+    .sheikah-eye {
+      position:fixed; width:520px; height:520px;
+      top:50%; left:50%; transform:translate(-50%,-50%);
+      opacity:.03; pointer-events:none; z-index:0;
+    }
+
+    /* Particles */
+    .particle {
+      position:fixed; pointer-events:none;
+      animation:drift linear infinite; z-index:1; opacity:.6;
+    }
+    @keyframes drift {
+      0%{transform:translateY(110vh) rotate(0deg);opacity:0;}
+      10%{opacity:.6;}90%{opacity:.6;}
+      100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}
+    }
+
+    /* Cursor */
+    .cursor {
+      width:20px;height:20px;
+      border:2px solid var(--sheikah); border-radius:50%;
+      position:fixed; pointer-events:none; z-index:9999;
+      top:0; left:0;
+      transition:width .15s,height .15s,background .15s;
+      box-shadow:0 0 10px var(--sheikah),0 0 20px rgba(0,229,255,.3);
+      will-change:transform;
+    }
+    .cursor-dot {
+      width:4px;height:4px; background:var(--sheikah); border-radius:50%;
+      position:fixed; pointer-events:none; z-index:9999;
+      top:0; left:0;
+      box-shadow:0 0 6px var(--sheikah);
+      will-change:transform;
+    }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0;left:0;right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2.5rem;
+      background:rgba(13,27,18,.85); backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(0,229,255,.12);
+    }
+    .nav-logo {
+      font-family:'Press Start 2P',monospace; font-size:.9rem;
+      color:var(--poke-yellow);
+      text-shadow:0 0 12px rgba(255,203,5,.6); letter-spacing:1px;
+    }
+    .nav-links{display:flex;gap:2rem;list-style:none;}
+    .nav-links a {
+      color:var(--muted); text-decoration:none;
+      font-weight:800; font-size:.85rem; letter-spacing:.5px;
+      transition:color .2s,text-shadow .2s;
+    }
+    .nav-links a:hover{color:var(--sheikah);text-shadow:0 0 8px rgba(0,229,255,.5);}
+
+    /* HERO */
+    #hero {
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; text-align:center;
+      padding:7rem 2rem 4rem; position:relative; z-index:2;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:rgba(255,203,5,.1); border:1px solid rgba(255,203,5,.3);
+      border-radius:100px; padding:.4rem 1.2rem;
+      font-size:.72rem; font-weight:800; color:var(--poke-yellow);
+      letter-spacing:1.5px; text-transform:uppercase; margin-bottom:1.8rem;
+      animation:fadeUp .6s ease forwards;
+    }
+    .hero-name {
+      font-family:'Press Start 2P',monospace;
+      font-size:clamp(1.4rem,4vw,2.8rem); line-height:1.5;
+      margin-bottom:.8rem;
+      color:var(--text); text-shadow:0 0 30px rgba(0,229,255,.3);
+    }
+    .hero-name .hl {
+      color:var(--poke-yellow);
+      text-shadow:0 0 20px rgba(255,203,5,.5),0 2px 0 #9c7a00;
+    }
+    .hero-title {
+      font-size:clamp(.85rem,2.5vw,1.1rem); color:var(--muted);
+      font-weight:700; margin-bottom:2rem; letter-spacing:.5px;
+    }
+    .pokeball-div {
+      display:flex;align-items:center;gap:1rem;justify-content:center;
+      margin-bottom:2rem; animation:fadeUp .7s .25s ease both;
+    }
+    .pb-line{width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--sheikah));}
+    .pb-line.r{background:linear-gradient(90deg,var(--sheikah),transparent);}
+    .hero-tags {
+      display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;
+      margin-bottom:2.5rem; animation:fadeUp .7s .3s ease both;
+    }
+    .tag{padding:.35rem 1rem;border-radius:100px;font-size:.78rem;font-weight:800;letter-spacing:.5px;}
+    .t-cy{background:rgba(0,229,255,.1);color:var(--sheikah);border:1px solid rgba(0,229,255,.3);}
+    .t-y {background:rgba(255,203,5,.1);color:var(--poke-yellow);border:1px solid rgba(255,203,5,.3);}
+    .t-r {background:rgba(227,53,13,.1);color:#ff7055;border:1px solid rgba(227,53,13,.3);}
+    .t-g {background:rgba(93,191,106,.1);color:var(--grass);border:1px solid rgba(93,191,106,.3);}
+    .t-b {background:rgba(61,125,202,.1);color:#6fa8f5;border:1px solid rgba(61,125,202,.3);}
+    .hero-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .7s .4s ease both;}
+    .btn{
+      padding:.8rem 2rem;border-radius:100px;
+      font-family:'Nunito',sans-serif;font-weight:800;font-size:.9rem;
+      cursor:pointer;text-decoration:none;
+      transition:transform .2s,box-shadow .2s;
+      display:inline-flex;align-items:center;gap:.5rem;
+    }
+    .btn:hover{transform:translateY(-3px);}
+    .btn-r{background:linear-gradient(135deg,var(--poke-red),#ff7055);color:#fff;border:none;box-shadow:0 8px 25px rgba(227,53,13,.4);}
+    .btn-r:hover{box-shadow:0 14px 35px rgba(227,53,13,.55);}
+    .btn-c{background:transparent;color:var(--sheikah);border:2px solid rgba(0,229,255,.35);box-shadow:0 0 12px rgba(0,229,255,.1) inset;}
+    .btn-c:hover{border-color:var(--sheikah);box-shadow:0 0 20px rgba(0,229,255,.25) inset;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+    
+
+    /* SECTIONS */
+    .sw{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:6rem 2rem;}
+    .sl{font-family:'Press Start 2P',monospace;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--sheikah);margin-bottom:.6rem;opacity:.85;}
+    .st{font-family:'Press Start 2P',monospace;font-size:clamp(1rem,3vw,1.6rem);margin-bottom:3rem;line-height:1.6;color:var(--poke-yellow);text-shadow:0 0 20px rgba(255,203,5,.25);}
+
+    /* CARDS */
+    .sc{
+      background:var(--card-bg);border:1px solid rgba(0,229,255,.12);
+      border-radius:var(--radius);backdrop-filter:blur(10px);
+      transition:transform .2s,border-color .2s,box-shadow .2s;
+      position:relative;overflow:hidden;
+    }
+    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--sheikah),transparent);opacity:.6;}
+    .sc:hover{transform:translateY(-5px);border-color:rgba(0,229,255,.3);box-shadow:0 10px 40px rgba(0,0,0,.4),0 0 20px rgba(0,229,255,.08);}
+
+    /* ABOUT */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+    .about-text p{color:var(--muted);font-size:1rem;line-height:1.85;margin-bottom:1rem;}
+    .about-text strong{color:var(--text);}
+    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .stat-card{padding:1.4rem;text-align:center;}
+    .stat-emoji{font-size:2rem;margin-bottom:.4rem;display:block;}
+    .stat-label{font-size:.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700;}
+    .stat-val{font-family:'Press Start 2P',monospace;font-size:.8rem;margin-top:.4rem;color:var(--poke-yellow);}
+
+    /* SKILLS */
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem;}
+    .skill-cat{padding:1.6rem;}
+    .skill-cat-title{font-family:'Press Start 2P',monospace;font-size:.65rem;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;letter-spacing:1px;}
+    .skill-pills{display:flex;flex-wrap:wrap;gap:.5rem;}
+    .pill{
+      padding:.3rem .85rem;border-radius:100px;font-size:.78rem;font-weight:700;
+      background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.08);
+      transition:background .2s,color .2s,border-color .2s;
+    }
+    .pill:hover{background:rgba(0,229,255,.1);color:var(--sheikah);border-color:rgba(0,229,255,.3);}
+
+    /* TIMELINE */
+    .timeline{position:relative;padding-left:2.2rem;}
+    .timeline::before{content:'';position:absolute;left:.35rem;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--poke-red),var(--poke-yellow),var(--sheikah));border-radius:2px;}
+    .tl-item{position:relative;margin-bottom:2.5rem;padding-left:1.5rem;}
+    .tl-item::before{content:'▲';position:absolute;left:-2rem;top:2px;font-size:.7rem;color:var(--poke-yellow);text-shadow:0 0 8px rgba(255,203,5,.6);}
+    .tl-role{font-family:'Press Start 2P',monospace;font-size:.7rem;line-height:1.6;margin-bottom:.3rem;color:var(--text);}
+    .tl-co{color:var(--sheikah);font-weight:800;font-size:.88rem;margin-bottom:.2rem;}
+    .tl-date{color:var(--muted);font-size:.72rem;font-weight:700;margin-bottom:.55rem;letter-spacing:.5px;}
+    .tl-desc{color:var(--muted);font-size:.88rem;line-height:1.75;}
+
+    /* PROJECTS */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;}
+    .proj-card{padding:1.8rem;}
+    .proj-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;opacity:.5;border-radius:0 0 var(--radius) var(--radius);}
+    .proj-card:nth-child(1)::after{background:linear-gradient(90deg,var(--poke-red),var(--poke-yellow));}
+    .proj-card:nth-child(2)::after{background:linear-gradient(90deg,var(--sheikah),var(--poke-blue));}
+    .proj-card:nth-child(3)::after{background:linear-gradient(90deg,var(--grass),var(--sheikah));}
+    .proj-icon{font-size:2.4rem;margin-bottom:.7rem;display:block;}
+    .proj-title{font-family:'Press Start 2P',monospace;font-size:.8rem;line-height:1.6;margin-bottom:.3rem;color:var(--text);}
+    .proj-sub{color:var(--sheikah);font-size:.75rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:.8rem;}
+    .proj-desc{color:var(--muted);font-size:.88rem;line-height:1.75;margin-bottom:1rem;}
+    .proj-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+    .proj-tag{font-size:.7rem;font-weight:700;padding:.2rem .7rem;border-radius:100px;background:rgba(61,125,202,.12);color:#6fa8f5;border:1px solid rgba(61,125,202,.25);}
+
+    /* CONTACT */
+    #contact{text-align:center;}
+    .contact-inner{max-width:680px;margin:0 auto;padding:3.5rem 3rem;}
+    .contact-inner p{color:var(--muted);font-size:1rem;line-height:1.8;margin-bottom:2rem;}
+    .contact-links{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-bottom:2.5rem;}
+    .c-link{
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.65rem 1.4rem;border-radius:100px;
+      font-weight:800;font-size:.85rem;text-decoration:none;
+      color:var(--text);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+      transition:transform .2s,border-color .2s,box-shadow .2s;
+    }
+    .c-link:hover{transform:translateY(-3px);border-color:var(--sheikah);box-shadow:0 0 15px rgba(0,229,255,.15);}
+    .contact-form{display:flex;flex-direction:column;gap:1rem;text-align:left;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-group{display:flex;flex-direction:column;gap:.4rem;}
+    .form-group label{font-size:.6rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-family:'Press Start 2P',monospace;}
+    .form-group input,.form-group textarea{
+      background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);
+      border-radius:12px;padding:.8rem 1rem;color:var(--text);
+      font-family:'Nunito',sans-serif;font-size:.95rem;outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--sheikah);box-shadow:0 0 0 3px rgba(0,229,255,.12);}
+    .form-group textarea{resize:vertical;min-height:120px;}
+    .form-submit{
+      background:linear-gradient(135deg,var(--poke-red),#ff7055);
+      border:none;border-radius:100px;padding:.9rem 2.5rem;
+      font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;
+      color:#fff;cursor:pointer;
+      transition:transform .2s,box-shadow .2s;align-self:flex-start;
+      box-shadow:0 8px 25px rgba(227,53,13,.35);
+    }
+    .form-submit:hover{transform:translateY(-3px);box-shadow:0 14px 35px rgba(227,53,13,.5);}
+
+    footer{
+      position:relative;z-index:2;text-align:center;padding:2rem;
+      color:var(--muted);font-size:.8rem;border-top:1px solid rgba(0,229,255,.08);
+    }
+    .footer-logo{font-family:'Press Start 2P',monospace;font-size:.6rem;color:var(--poke-yellow);margin-bottom:.5rem;display:block;}
+
+    .reveal{opacity:1;transform:translateY(0);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.hidden{opacity:0;transform:translateY(28px);}
+    .reveal.hidden.visible{opacity:1;transform:translateY(0);}
+
+    @media(max-width:768px){
+      .about-grid{grid-template-columns:1fr;}
+      .form-row{grid-template-columns:1fr;}
+      .nav-links{gap:1rem;}
+      nav{padding:1rem 1.2rem;}
+      .contact-inner{padding:2.5rem 1.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="world-bg"><div class="stars" id="stars"></div></div>
+
+<svg class="sheikah-eye" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <ellipse cx="100" cy="100" rx="90" ry="55" fill="none" stroke="#00e5ff" stroke-width="3"/>
+  <circle cx="100" cy="100" r="28" fill="none" stroke="#00e5ff" stroke-width="3"/>
+  <circle cx="100" cy="100" r="10" fill="#00e5ff"/>
+  <line x1="100" y1="45" x2="100" y2="15" stroke="#00e5ff" stroke-width="2.5"/>
+  <line x1="100" y1="155" x2="100" y2="185" stroke="#00e5ff" stroke-width="2.5"/>
+  <line x1="10" y1="100" x2="40" y2="100" stroke="#00e5ff" stroke-width="2"/>
+  <line x1="160" y1="100" x2="190" y2="100" stroke="#00e5ff" stroke-width="2"/>
+  <polygon points="100,28 106,42 94,42" fill="#00e5ff"/>
+  <polygon points="100,172 106,158 94,158" fill="#00e5ff"/>
+</svg>
+
+<div id="particles"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GR ★</div>
+  <ul class="nav-links">
+    <li><a href="#about">Who Am I</a></li>
+    <li><a href="#skills">Abilities</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">⚡ Open to Opportunities · Class of Dec 2026</div>
+  <h1 class="hero-name"><span class="hl">GERARDO</span><br/>RAMIREZ</h1>
+  <p class="hero-title">EE + CE Engineer · Tennessee Tech · Hero of Hyrule</p>
+  <div class="pokeball-div">
+    <div class="pb-line"></div>
+    <span style="font-size:1.4rem">◉</span>
+    <div class="pb-line r"></div>
+  </div>
+  <div class="hero-tags">
+    <span class="tag t-r">⚡ Electrical Eng.</span>
+    <span class="tag t-b">💻 Computer Eng.</span>
+    <span class="tag t-y">🤖 Embedded Systems</span>
+    <span class="tag t-g">🔧 PLC Automation</span>
+    <span class="tag t-cy">🌎 Bilingual EN/ES</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#projects" class="btn btn-r">⚔️ See My Work</a>
+    <a href="#contact" class="btn btn-c">💬 Say Hello</a>
+    <a href="https://github.com/gmostar" target="_blank" class="btn btn-c">🐙 GitHub</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sw">
+    <div class="reveal">
+      
+      <h2 class="st">WHO AM I? 👾</h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Hey! I'm <strong>Gerardo Ramirez</strong> — a <strong>double-major in Electrical & Computer Engineering</strong> at Tennessee Tech University, with minors in Computer Science and Mathematics. Graduating December 2026 with a 3.46 GPA.</p>
+        <p>Originally from <strong>Orange County, CA</strong>, I grew up with a controller in one hand and a curiosity for how things work in the other. Now I build real systems — from autonomous robots and audio synthesizers to PLC automation on real factory floors.</p>
+        <p>When I'm not deep in circuits or code, you might catch me at <strong>GEODIS Park</strong> hosting Nashville SC matches ⚽ — MLS's largest soccer-specific stadium!</p>
+      </div>
+      <div class="about-stats">
+        <div class="sc stat-card"><span class="stat-emoji">🎓</span><div class="stat-label">University</div><div class="stat-val">TN TECH</div></div>
+        <div class="sc stat-card"><span class="stat-emoji">📍</span><div class="stat-label">Location</div><div class="stat-val">TN, USA</div></div>
+        <div class="sc stat-card"><span class="stat-emoji">🏆</span><div class="stat-label">GPA</div><div class="stat-val">3.46/4.0</div></div>
+        <div class="sc stat-card"><span class="stat-emoji">🌎</span><div class="stat-label">Languages</div><div class="stat-val">EN + ES</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sw">
+    <div class="reveal">
+      
+      <h2 class="st">ABILITIES 🛠️</h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="sc skill-cat">
+        <div class="skill-cat-title" style="color:var(--poke-yellow)">⚡ Programming</div>
+        <div class="skill-pills">
+          <span class="pill">C++</span><span class="pill">Python</span><span class="pill">C</span><span class="pill">Assembly</span><span class="pill">VHDL</span>
+        </div>
+      </div>
+      <div class="sc skill-cat">
+        <div class="skill-cat-title" style="color:var(--sheikah)">🔮 Automation</div>
+        <div class="skill-pills">
+          <span class="pill">PLC (Siemens STEP 7)</span><span class="pill">HMI Design</span><span class="pill">SCADA</span><span class="pill">Ladder Logic</span>
+        </div>
+      </div>
+      <div class="sc skill-cat">
+        <div class="skill-cat-title" style="color:var(--grass)">🔌 Hardware</div>
+        <div class="skill-pills">
+          <span class="pill">STM32</span><span class="pill">FPGA (DE10-Lite)</span><span class="pill">Embedded Systems</span><span class="pill">Siemens</span>
+        </div>
+      </div>
+      <div class="sc skill-cat">
+        <div class="skill-cat-title" style="color:#6fa8f5">🖥️ Software</div>
+        <div class="skill-pills">
+          <span class="pill">Intel Quartus</span><span class="pill">AutoCAD</span><span class="pill">Excel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sw">
+    <div class="reveal">
+      
+      <h2 class="st">EXPERIENCE 📜</h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-role">LEAD ENGINEER – CIRCE V2</div>
+        <div class="tl-co">DEVCOM Capstone · Tennessee Tech</div>
+        <div class="tl-date">JAN 2026 – PRESENT</div>
+        <div class="tl-desc">Leading a 6-person cross-departmental team (EE & ME) to design an autonomous cable installation robot for contested environments. Directing embedded systems, comms networking, and autonomy workstreams.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">GUEST EXPERIENCE HOST</div>
+        <div class="tl-co">Nashville Soccer Club · Nashville, TN</div>
+        <div class="tl-date">FEB 2026 – PRESENT</div>
+        <div class="tl-desc">Front-line ambassador at GEODIS Park (MLS's largest soccer-specific stadium). Managing access control, mobile ticketing, and guest relations across 15–20 home matches per year.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">ELECTRICAL ENGINEERING INTERN</div>
+        <div class="tl-co">Logan Aluminum · Russellville, KY</div>
+        <div class="tl-date">MAY 2025 – AUG 2025</div>
+        <div class="tl-desc">Engineered PLC automation using Siemens SIMATIC STEP 7, designed custom HMI interfaces, produced electrical schematics, and resolved mill operations issues to minimize production downtime.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">ENGINEERING TUTOR (WORK STUDY)</div>
+        <div class="tl-co">Tennessee Tech – Student Success Center</div>
+        <div class="tl-date">OCT 2025 – PRESENT</div>
+        <div class="tl-desc">Tutoring engineering students in circuits, programming, and math. Supporting workshop facilitation and resource coordination to enhance student retention.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">WELDER TECHNICIAN</div>
+        <div class="tl-co">Pacific Industrial Co · Jackson, TN</div>
+        <div class="tl-date">MAY 2024 – AUG 2024</div>
+        <div class="tl-desc">Read and interpreted blueprints and technical drawings to execute welding projects, achieving a 20% increase in on-time completion.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-role">FOREMAN</div>
+        <div class="tl-co">Hixson Lumber Company · Milan, TN</div>
+        <div class="tl-date">DEC 2022 – AUG 2023</div>
+        <div class="tl-desc">Supervised 20+ workers in lumber production, implementing safety protocols that reduced workplace accidents by 25%.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sw">
+    <div class="reveal">
+      
+      <h2 class="st">PROJECTS ⚔️</h2>
+    </div>
+    <div class="projects-grid reveal">
+      <div class="sc proj-card">
+        <span class="proj-icon">🤖</span>
+        <div class="proj-title">CIRCE V2</div>
+        <div class="proj-sub">Capstone · Lead Engineer</div>
+        <div class="proj-desc">Autonomous cable installation robot for contested environments. Redesigned from scratch after a prior failed iteration, leading a cross-disciplinary EE & ME team of 6.</div>
+        <div class="proj-tags"><span class="proj-tag">Embedded</span><span class="proj-tag">Robotics</span><span class="proj-tag">Networking</span><span class="proj-tag">Autonomy</span></div>
+      </div>
+      <div class="sc proj-card">
+        <span class="proj-icon">🎵</span>
+        <div class="proj-title">DIGITAL AUDIO SYNTH</div>
+        <div class="proj-sub">Embedded Systems Design</div>
+        <div class="proj-desc">Dual-board master-slave synthesizer using STM32 microcontrollers with SPI, I2C OLED displays, and PWM audio generation across 36 notes spanning three octaves.</div>
+        <div class="proj-tags"><span class="proj-tag">STM32</span><span class="proj-tag">SPI</span><span class="proj-tag">I2C</span><span class="proj-tag">PWM</span></div>
+      </div>
+      <div class="sc proj-card">
+        <span class="proj-icon">⚡</span>
+        <div class="proj-title">FPGA ACCEL. COUNTER</div>
+        <div class="proj-sub">Digital Systems Design</div>
+        <div class="proj-desc">VHDL ripple counter with testbench validation in Intel Quartus. Programmed a DE10-Lite FPGA to interface with an onboard accelerometer for tilt-responsive counting.</div>
+        <div class="proj-tags"><span class="proj-tag">VHDL</span><span class="proj-tag">FPGA</span><span class="proj-tag">Quartus</span><span class="proj-tag">DE10-Lite</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sw">
+    <div class="reveal">
+      
+      <h2 class="st">LET'S CONNECT! 🤝</h2>
+    </div>
+    <div class="sc contact-inner reveal">
+      <p>Whether you have an opportunity, a question, or just want to talk shop — I'm always open. Currently looking for internship and full-time opportunities in EE/CE!</p>
+      <div class="contact-links">
+        <a href="/cdn-cgi/l/email-protection#85e2e0f7e4f7e1eaabf7ffb2bdb0c5e2e8e4ece9abe6eae8" class="c-link">📧 Email</a>
+        <a href="https://linkedin.com/in/gerardoramirez42" target="_blank" class="c-link">💼 LinkedIn</a>
+        <a href="https://github.com/gmostar" target="_blank" class="c-link">🐙 GitHub</a>
+      </div>
+      <form class="contact-form" onsubmit="handleForm(event)">
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com" required/></div>
+        </div>
+        <div class="form-group"><label>Message</label><textarea placeholder="What's on your mind?" required></textarea></div>
+        <button type="submit" class="form-submit">⚔️ Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">GERARDO RAMIREZ © 2026</span>
+  <p>Built with ⚡ · Powered by curiosity & caffeine</p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*2.5+1;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    starsEl.appendChild(s);
+  }
+
+  // Particles
+  const syms=['✨','⚡','🌿','💎','🔮','⭐','🍃','💫','🗡️','🛡️'];
+  const pel=document.getElementById('particles');
+  for(let i=0;i<14;i++){
+    const p=document.createElement('div'); p.className='particle';
+    p.textContent=syms[i%syms.length];
+    p.style.cssText=`left:${Math.random()*100}%;animation-duration:${12+Math.random()*20}s;animation-delay:${Math.random()*15}s;font-size:${0.8+Math.random()*.8}rem;`;
+    pel.appendChild(p);
+  }
+
+  // Cursor
+  const cur=document.getElementById('cursor'), dot=document.getElementById('cursorDot');
+  let mx=window.innerWidth/2, my=window.innerHeight/2, cx=mx, cy=my;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function loop(){
+    cx+=(mx-cx)*.12; cy+=(my-cy)*.12;
+    cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
+    dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';});
+    el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='transparent';});
+  });
+
+  // Scroll reveal
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.remove('hidden');}});},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('hidden');obs.observe(el);});
+
+  // Form
+  function handleForm(e){
+    e.preventDefault();
+    const btn=e.target.querySelector('.form-submit');
+    btn.textContent='✅ Message Sent!';
+    btn.style.background='linear-gradient(135deg,#5d
