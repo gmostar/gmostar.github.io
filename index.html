@@ -482,7 +482,7 @@
     <div class="sc contact-inner reveal">
       <p>Whether you have an opportunity, a question, or just want to talk shop — I'm always open. Currently looking for internship and full-time opportunities in EE/CE!</p>
       <div class="contact-links">
-        <a href="/cdn-cgi/l/email-protection#85e2e0f7e4f7e1eaabf7ffb2bdb0c5e2e8e4ece9abe6eae8" class="c-link">📧 Email</a>
+        <a href="mailto:gerardo.rz785&#64;gmail.com" class="c-link">📧 Email</a>
         <a href="https://linkedin.com/in/gerardoramirez42" target="_blank" class="c-link">💼 LinkedIn</a>
         <a href="https://github.com/gmostar" target="_blank" class="c-link">🐙 GitHub</a>
       </div>
@@ -503,7 +503,7 @@
   <p>Built with ⚡ · Powered by curiosity & caffeine</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // Stars
   const starsEl = document.getElementById('stars');
   for(let i=0;i<120;i++){
@@ -526,15 +526,17 @@
   // Cursor
   const cur=document.getElementById('cursor'), dot=document.getElementById('cursorDot');
   let mx=window.innerWidth/2, my=window.innerHeight/2, cx=mx, cy=my;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  let cursorActive = false;
+  document.addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;if(!cursorActive){cursorActive=true;cur.style.opacity='1';dot.style.opacity='1';}});
+  cur.style.opacity='0'; dot.style.opacity='0';
   (function loop(){
-    cx+=(mx-cx)*.12; cy+=(my-cy)*.12;
+    cx+=(mx-cx)*.15; cy+=(my-cy)*.15;
     cur.style.transform=`translate(${cx-10}px,${cy-10}px)`;
     dot.style.transform=`translate(${mx-2}px,${my-2}px)`;
     requestAnimationFrame(loop);
   })();
   document.querySelectorAll('a,button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';});
+    el.addEventListener('mouseenter',()=>{cur.style.width='36px';cur.style.height='36px';cur.style.background='rgba(0,229,255,0.15)';cur.style.transform=`translate(${cx-18}px,${cy-18}px)`;});
     el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='transparent';});
   });
 
