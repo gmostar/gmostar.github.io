@@ -277,6 +277,79 @@
       nav{padding:1rem 1.2rem;}
       .contact-inner{padding:2.5rem 1.5rem;}
     }
+
+    /* ── DAY THEME ── */
+    body.day { --sheikah:#0077aa; --poke-yellow:#d4a000; --poke-red:#cc2200; --grass:#2e8b3a; --dark:#d4eaf7; --card-bg:rgba(255,255,255,0.78); --text:#0d1b12; --muted:#3a5a4a; }
+    body.day .world-bg { background:linear-gradient(180deg,#7ecfff 0%,#b8efb0 55%,#d4eaf7 100%); }
+    body.day .star { display:none; }
+    body.day .sheikah-eye { opacity:.04; }
+    body.day nav { background:rgba(212,234,247,.9); border-bottom:1px solid rgba(0,119,170,.15); }
+    body.day .sc { background:rgba(255,255,255,.78); border-color:rgba(0,119,170,.15); }
+    body.day .pill { background:rgba(0,0,0,.06); border-color:rgba(0,0,0,.1); }
+    body.day .form-group input, body.day .form-group textarea { background:rgba(0,0,0,.04); border-color:rgba(0,119,170,.2); color:var(--text); }
+    body, .world-bg, nav, .sc, footer { transition:background .5s, color .3s, border-color .3s; }
+
+    /* ── TOGGLE BTN ── */
+    #themeToggle {
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+      border-radius:100px; padding:.35rem .8rem; font-size:1rem;
+      cursor:pointer; transition:background .2s,transform .2s; color:var(--text);
+    }
+    #themeToggle:hover { background:rgba(255,255,255,.18); transform:rotate(20deg); }
+
+    /* ── BATTLE OVERLAY ── */
+    #battleOverlay {
+      display:none; position:fixed; inset:0; z-index:10000;
+      background:#000; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    }
+    #battleOverlay.active { display:flex; }
+    .battle-flash { position:absolute; inset:0; background:#fff; animation:bFlash .6s ease forwards; pointer-events:none; }
+    @keyframes bFlash { 0%{opacity:1;} 100%{opacity:0;} }
+    .battle-text {
+      font-family:'Press Start 2P',monospace; font-size:clamp(.8rem,2vw,1.2rem);
+      color:var(--poke-yellow); text-shadow:0 0 20px rgba(255,203,5,.6);
+      animation:bPulse 1s ease-in-out infinite; margin-bottom:2rem; line-height:2;
+    }
+    @keyframes bPulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+    .battle-close {
+      font-family:'Press Start 2P',monospace; font-size:.55rem;
+      background:transparent; border:1px solid rgba(255,255,255,.2);
+      border-radius:100px; padding:.6rem 1.5rem; cursor:pointer; color:#aaa;
+      transition:color .2s,border-color .2s;
+    }
+    .battle-close:hover { color:#fff; border-color:#fff; }
+
+    /* ── BLOG OVERLAY ── */
+    #blogOverlay {
+      display:none; position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,.92); backdrop-filter:blur(12px);
+      overflow-y:auto; padding:4rem 2rem;
+    }
+    #blogOverlay.active { display:block; }
+    .blog-inner { max-width:720px; margin:0 auto; }
+    .blog-header { font-family:'Press Start 2P',monospace; font-size:clamp(.9rem,2.5vw,1.3rem); color:var(--poke-yellow); text-shadow:0 0 20px rgba(255,203,5,.4); margin-bottom:.5rem; }
+    .blog-sub { color:var(--sheikah); font-size:.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:2.5rem; display:block; }
+    .blog-post { background:rgba(255,255,255,.05); border:1px solid rgba(0,229,255,.12); border-radius:var(--radius); padding:1.8rem; margin-bottom:1.5rem; position:relative; overflow:hidden; }
+    .blog-post::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--sheikah),transparent); }
+    .blog-post-title { font-family:'Press Start 2P',monospace; font-size:.7rem; color:var(--poke-yellow); margin-bottom:.5rem; line-height:1.6; }
+    .blog-post-date { font-size:.72rem; color:var(--muted); font-weight:700; letter-spacing:1px; margin-bottom:1rem; }
+    .blog-post-body { color:var(--muted); font-size:.95rem; line-height:1.85; }
+    .blog-close { font-family:'Press Start 2P',monospace; font-size:.55rem; background:transparent; border:1px solid rgba(255,255,255,.2); border-radius:100px; padding:.7rem 1.8rem; cursor:pointer; color:#aaa; margin-top:1rem; transition:color .2s,border-color .2s; display:block; }
+    .blog-close:hover { color:#fff; border-color:#fff; }
+
+    /* ── STATUS OVERLAY ── */
+    #statusOverlay {
+      display:none; position:fixed; inset:0; z-index:10000;
+      background:rgba(0,0,0,.88); backdrop-filter:blur(12px);
+      align-items:center; justify-content:center; text-align:center; padding:2rem;
+    }
+    #statusOverlay.active { display:flex; }
+    .status-card { background:var(--card-bg); border:1px solid rgba(0,229,255,.2); border-radius:24px; padding:3rem; max-width:480px; position:relative; overflow:hidden; }
+    .status-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--sheikah),transparent); }
+    .status-label { font-family:'Press Start 2P',monospace; font-size:.5rem; letter-spacing:3px; text-transform:uppercase; color:var(--sheikah); margin-bottom:1rem; display:block; }
+    .status-msg { font-family:'Press Start 2P',monospace; font-size:clamp(1rem,3vw,1.6rem); color:var(--poke-yellow); text-shadow:0 0 20px rgba(255,203,5,.4); margin-bottom:2rem; line-height:1.6; display:block; }
+    .status-close { font-family:'Press Start 2P',monospace; font-size:.55rem; background:transparent; border:1px solid rgba(255,255,255,.2); border-radius:100px; padding:.7rem 1.8rem; cursor:pointer; color:#aaa; transition:color .2s,border-color .2s; }
+    .status-close:hover { color:#fff; border-color:#fff; }
   </style>
 </head>
 <body>
@@ -309,6 +382,7 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <button id="themeToggle" aria-label="Toggle day/night">🌙</button>
 </nav>
 
 <!-- HERO -->
@@ -501,6 +575,41 @@
   </div>
 </section>
 
+<!-- BATTLE OVERLAY -->
+<div id="battleOverlay">
+  <div class="battle-flash"></div>
+  <div class="battle-text">⚡ A WILD ZEKROM APPEARED! ⚡<br/>LEGENDARY DRAGON — UNOVA REGION</div>
+  <div id="battleYTWrap" style="margin-bottom:1.5rem;border-radius:12px;overflow:hidden;width:min(560px,90vw);height:0;padding-bottom:min(315px,50.6vw);position:relative;">
+    <iframe id="battleYT" src="" allow="autoplay" allowfullscreen title="battle theme"
+      style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+  </div>
+  <button class="battle-close" id="battlePlayBtn" onclick="startBattleMusic()" style="margin-bottom:1rem;color:var(--poke-yellow);border-color:rgba(255,203,5,.4);">▶ PLAY BATTLE THEME</button>
+  <button class="battle-close" onclick="closeBattle()">✖ FLEE BATTLE</button>
+</div>
+
+<!-- BLOG OVERLAY -->
+<div id="blogOverlay">
+  <div class="blog-inner">
+    <h2 class="blog-header">📓 GERARDO'S LOG</h2>
+    <span class="blog-sub">// secret area — you found it</span>
+    <div class="blog-post">
+      <div class="blog-post-title">Entry #001 — Hello World</div>
+      <div class="blog-post-date">March 2026</div>
+      <div class="blog-post-body">This is the beginning of my personal log. I'll be writing here whenever something interesting happens — whether it's a breakthrough on CIRCE V2, a thought I can't shake, or just something worth remembering. If you found this, you're paying attention. More soon. ✨</div>
+    </div>
+    <button class="blog-close" onclick="document.getElementById('blogOverlay').classList.remove('active')">✖ CLOSE LOG</button>
+  </div>
+</div>
+
+<!-- STATUS OVERLAY -->
+<div id="statusOverlay">
+  <div class="status-card">
+    <span class="status-label">// gerardo's current vibe</span>
+    <span class="status-msg">Limón 🍋</span>
+    <button class="status-close" onclick="document.getElementById('statusOverlay').classList.remove('active')">✖ CLOSE</button>
+  </div>
+</div>
+
 <footer>
   <span class="footer-logo">GERARDO RAMIREZ © 2026</span>
   <p>Built with ⚡ · Powered by curiosity & caffeine</p>
@@ -549,7 +658,45 @@
   // Scroll reveal
   const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.remove('hidden');}});},{threshold:.1});
   document.querySelectorAll('.reveal').forEach(el=>{el.classList.add('hidden');obs.observe(el);});
-  // Email button - split to avoid Cloudflare scraping
+  // ── DAY / NIGHT TOGGLE ──
+  const toggleBtn = document.getElementById('themeToggle');
+  const hour = new Date().getHours();
+  let isDay = hour >= 7 && hour < 19;
+  function applyTheme(){
+    document.body.classList.toggle('day', isDay);
+    toggleBtn.textContent = isDay ? '🌙' : '☀️';
+  }
+  applyTheme();
+  toggleBtn.addEventListener('click', ()=>{ isDay=!isDay; applyTheme(); });
+
+  // ── SECRET SEQUENCES ──
+  let keyBuffer = '';
+  const SEQUENCES = { zekrom:'zekrom', blog:'blog', status:'whatsonyourmind' };
+  document.addEventListener('keydown', e=>{
+    keyBuffer += e.key.toLowerCase();
+    if(keyBuffer.length > 20) keyBuffer = keyBuffer.slice(-20);
+    if(keyBuffer.endsWith(SEQUENCES.zekrom)) { keyBuffer=''; openBattle(); }
+    else if(keyBuffer.endsWith(SEQUENCES.blog)) { keyBuffer=''; document.getElementById('blogOverlay').classList.add('active'); }
+    else if(keyBuffer.endsWith(SEQUENCES.status)) { keyBuffer=''; document.getElementById('statusOverlay').classList.add('active'); }
+  });
+
+  // ── BATTLE ──
+  function openBattle(){
+    const overlay = document.getElementById('battleOverlay');
+    overlay.classList.add('active');
+    document.getElementById('battleYT').src = '';
+  }
+  function startBattleMusic(){
+    document.getElementById('battleYT').src = 'https://www.youtube.com/embed/aLVr0VfeLmk?autoplay=1&controls=1&loop=1&playlist=aLVr0VfeLmk';
+    document.getElementById('battlePlayBtn').style.display = 'none';
+  }
+  function closeBattle(){
+    document.getElementById('battleOverlay').classList.remove('active');
+    document.getElementById('battleYT').src = '';
+    document.getElementById('battlePlayBtn').style.display = 'block';
+  }
+
+  // ── EMAIL BUTTON ──
   const eLink = document.getElementById('emailLink');
   if(eLink) eLink.addEventListener('click', e=>{
     e.preventDefault();
